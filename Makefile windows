@@ -1,0 +1,46 @@
+# 1. Настройки компилятора
+CC = sdcc
+MCU = stm8
+# -I../../libs говорит компилятору искать .h файлы в папке с библиотеками
+CFLAGS = -m$(MCU) --std-sdcc99 -I. -I../../libs
+
+# 2. Пути
+# Относительный путь к твоим общим библиотекам
+LIB_DIR = ../../libs
+BUILD_DIR = build
+TARGET = sketch.hex
+
+# 3. Список исходников
+# Перечисли здесь те файлы из libs, которые нужны именно этому скетчу
+SOURCES = main.c \
+          $(LIB_DIR)/stm8_TIM4.c \
+          $(LIB_DIR)/stm8_PWM.c
+
+# 4. Превращаем пути из SOURCES в объекты внутри папки build
+# Это критично: мы не хотим "мусорить" в общей папке libs своими .rel файлами
+OBJECTS = $(addprefix $(BUILD_DIR)/, $(notdir $(SOURCES:.c=.rel)))
+
+# Говорим make, где искать исходники .c
+vpath %.c . $(LIB_DIR)
+
+# --- ПРАВИЛА ---
+
+all: prepare $(TARGET)
+
+# Создаем папку build, если её нет (в Windows через mkdir)
+prepare:
+	if not exist $(BUILD_DIR) mkdir $(BUILD_DIR)
+
+# Сборка финального HEX
+$(TARGET): $(OBJECTS)
+	$(CC) $(CFLAGS) $(OBJECTS) -o $(BUILD_DIR)/firmware.ihx
+	copy $(BUILD_DIR)\firmware.ihx $(TARGET)
+
+# Компиляция: берем .c из любой папки, кладем .rel строго в build/
+$(BUILD_DIR)/%.rel: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Очистка только текущего скетча
+clean:
+	if exist $(BUILD_DIR) rmdir /s /q $(BUILD_DIR)
+	if exist $(TARGET) del /q $(TARGET)
