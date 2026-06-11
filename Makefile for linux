@@ -4,7 +4,7 @@ MCU = stm8
 CFLAGS = -m$(MCU) --std-sdcc99 -I. -I../../libs
 
 # 2. Пути
-LIB_DIR = ../../libs
+LIB_DIR = ../../my_STM8_libraries
 BUILD_DIR = build
 TARGET = sketch.ihx
 

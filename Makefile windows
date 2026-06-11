@@ -6,7 +6,7 @@ CFLAGS = -m$(MCU) --std-sdcc99 -I. -I../../libs
 
 # 2. Пути
 # Относительный путь к твоим общим библиотекам
-LIB_DIR = ../../libs
+LIB_DIR = ../../my_STM8_libraries
 BUILD_DIR = build
 TARGET = sketch.hex
 
