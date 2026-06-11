@@ -1,7 +1,7 @@
 # 1. Настройки
 CC = sdcc
 MCU = stm8
-CFLAGS = -m$(MCU) --std-sdcc99 -I. -I../../libs
+CFLAGS = -m$(MCU) --std-sdcc99 -I. -I../../my_STM8_libraries
 
 # 2. Пути
 LIB_DIR = ../../my_STM8_libraries
